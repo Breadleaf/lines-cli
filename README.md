@@ -8,7 +8,7 @@
 
 ## install
 
-`$ make`
+`$ make help`
 
 ## usage
 
@@ -20,9 +20,34 @@
 
 `$ DEBUG=. lines`
 
+### examples
+
+Standard mode:
+```
+$ lines ".gitignore" "Makefile" "*.md" "*.c"
+      53 ./Makefile
+      30 ./README.md
+      99 ./main.c
+       1 ./.gitignore
+     183 total
+```
+Debug mode:
+```
+$ DEBUG=. lines ".gitignore" "Makefile" "*.md" "*.c"
+PATTERN[1] = ".gitignore"
+PATTERN[2] = "Makefile"
+PATTERN[3] = "*.md"
+PATTERN[4] = "*.c"
+      53 ./Makefile
+      30 ./README.md
+      99 ./main.c
+       1 ./.gitignore
+     183 total
+```
+
 ## why
 
-I didn't want to learn how to write portable shell to write this in the CLI.
+I didn't want to learn how to write portable shell to create this in the CLI.
 It was faster to just write the tool in C.
 
 The real problem was building the
