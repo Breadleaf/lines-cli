@@ -4,9 +4,18 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
+#define DEBUG(block)                                                           \
+    if (getenv("DEBUG") != NULL) {                                             \
+        block                                                                  \
+    }
+
 void run_command(const char *, char *const[], int, int);
 
 int main(int argc, char *argv[]) {
+    DEBUG(for (size_t i = 1; i < argc; i++) {
+        fprintf(stderr, "PATTERN[%lu] = \"%s\"\n", i, argv[i]);
+    });
+
     if (argc < 2) {
         fprintf(stdout, "usage: %s [glob 1] ... [glob N]\n", argv[0]);
         exit(1);
