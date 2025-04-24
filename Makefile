@@ -4,7 +4,7 @@ C_FILES := $(wildcard *.c)
 H_FILES := $(wildcard *.h)
 CLANG_FORMAT := $(shell which clang-format)
 EXEC_NAME := lines
-INSTALL_DIR := ~/.local/bin/
+INSTALL_DIR := $(HOME)/.local/bin/
 
 SHELL_NAME := $(shell basename $$SHELL)
 ifeq ($(SHELL_NAME),bash)
@@ -43,7 +43,26 @@ build:
 	$(CC) $(C_FLAGS) $(C_FILES) -o $(EXEC_NAME)
 
 install: build
-	mv -i ./$(EXEC_NAME) ~/.local/bin
+	mkdir -p $(INSTALL_DIR)
+	@if [ -e "$(INSTALL_DIR)$(EXEC_NAME)" ]; then \
+		printf "overwrite $(INSTALL_DIR)$(EXEC_NAME)? (y/n) "; \
+		read ans; \
+		if [ "$$ans" = "y" ]; then \
+			mv ./$(EXEC_NAME) "$(INSTALL_DIR)/"; \
+			echo; \
+			echo "WAIT! Please read the below section:"; \
+			echo; \
+			$(MAKE) tips; \
+		else \
+			echo "Not overwritten."; \
+		fi \
+	else \
+		mv ./$(EXEC_NAME) "$(INSTALL_DIR)/"; \
+		echo; \
+		echo "WAIT! Please read the below section:"; \
+		echo; \
+		$(MAKE) tips; \
+	fi
 
 remove:
 	rm -i ~/.local/bin/$(EXEC_NAME)
