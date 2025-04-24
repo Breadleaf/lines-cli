@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <stdbool.h>
+#include <string.h>
 
 #define IF_ENV(envvar) if (getenv(envvar) != NULL)
 
@@ -43,13 +45,15 @@ int main(int argc, char *argv[]) {
 
     find_argv[0] = "find";
     find_argv[1] = ".";
-    find_argv[2] = "-name";
+    bool first_has_slash = strchr(argv[1], '/') != NULL;
+    find_argv[2] = first_has_slash ? "-path" : "-name";
     find_argv[3] = argv[1];
 
     for (size_t i = 0; i < extras; i++) {
         size_t slot = 4 + i * 3;
+	bool has_slash = strchr(argv[i + 2], '/') != NULL;
         find_argv[slot + 0] = "-o";
-        find_argv[slot + 1] = "-name";
+        find_argv[slot + 1] = has_slash ? "-path" : "-name";
         find_argv[slot + 2] = argv[i + 2];
     }
 

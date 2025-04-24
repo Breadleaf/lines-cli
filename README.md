@@ -77,6 +77,19 @@ $ INGORE_GIT=. ./lines *
      306 total
 ```
 
+### tips
+
+#### specifying files
+
+When you want to refer to `*.py` and you are using `venv`, you may think to use
+`lines "*.py"` but this will not work. This will recurse into `venv` or other
+folders with `*.py` files within. To get around this, let the shell expand it
+for you by using `lines *.py`.
+
+#### specifying dirs
+
+This feature is very weird. I am going to do a rewrite at some point to fix it.
+
 ## why
 
 I didn't want to learn how to write portable shell to create this in the CLI.
