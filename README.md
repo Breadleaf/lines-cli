@@ -40,36 +40,41 @@ commands `find`, `xargs`, and `wc`.
 
 Standard mode:
 ```
-$ lines ".gitignore" "Makefile" "*.md" "*.c"
-      53 ./Makefile
-      30 ./README.md
-      99 ./main.c
-       1 ./.gitignore
-     183 total
+$ ls -Ap
+.git/ .gitignore lines main.c Makefile README.md
+$ ./lines "*.c" "*.md" "Makefile"
+      72 ./Makefile
+      82 ./README.md
+     134 ./main.c
+     288 total
 ```
 Debug mode:
 ```
-$ DEBUG=. lines ".gitignore" "Makefile" "*.md" "*.c"
-PATTERN[1] = ".gitignore"
-PATTERN[2] = "Makefile"
-PATTERN[3] = "*.md"
-PATTERN[4] = "*.c"
-      53 ./Makefile
-      30 ./README.md
-      99 ./main.c
-       1 ./.gitignore
-     183 total
+$ ls -Ap
+.git/ .gitignore lines main.c Makefile README.md
+$ DEBUG=. ./lines "*.c" "*.md" "Makefile"
+PATTERN[1] = "*.c"
+PATTERN[2] = "*.md"
+PATTERN[3] = "Makefile"
+Running 'find' command:
+(find . -name *.c -o -name *.md -o -name Makefile -type f)
+Running 'xargs' command:
+(xargs wc -l)
+      72 ./Makefile
+      82 ./README.md
+     134 ./main.c
+     288 total
 ```
 Ignore Git mode:
 ```
 $ ls -Ap
 .git/ .gitignore lines main.c Makefile README.md
-$ IGNORE_GIT=. ./lines "*"
+$ INGORE_GIT=. ./lines *
       72 ./Makefile
-      74 ./README.md
-     111 ./main.c
-      14 ./lines
-     271 total
+      82 ./README.md
+     134 ./main.c
+      18 ./lines
+     306 total
 ```
 
 ## why
