@@ -63,11 +63,34 @@ int main(int argc, char *argv[]) {
     find_argv[find_argc - 2] = "f";
     find_argv[find_argc - 1] = NULL;
 
+    IF_ENV("DEBUG") {
+        printf("Running 'find' command:\n(");
+        for (size_t i = 0; find_argv[i] != NULL; i++) {
+            printf("%s", find_argv[i]);
+            if (find_argv[i + 1] != NULL) {
+                printf(" ");
+            }
+        }
+        printf(")\n");
+    }
+
     run_command("find", (char *const *)find_argv, STDIN_FILENO, pipefd[1]);
     close(pipefd[1]);
     free(find_argv);
 
     char *const xargs_argv[] = {"xargs", "wc", "-l", NULL};
+
+    IF_ENV("DEBUG") {
+        printf("Running 'xargs' command:\n(");
+        for (size_t i = 0; xargs_argv[i] != NULL; i++) {
+            printf("%s", xargs_argv[i]);
+            if (xargs_argv[i + 1] != NULL) {
+                printf(" ");
+            }
+        }
+        printf(")\n");
+    }
+
     run_command("xargs", xargs_argv, pipefd[0], STDOUT_FILENO);
     close(pipefd[0]);
 
