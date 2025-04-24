@@ -4,17 +4,16 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-#define DEBUG(block)                                                           \
-    if (getenv("DEBUG") != NULL) {                                             \
-        block                                                                  \
-    }
+#define IF_ENV(envvar) if (getenv(envvar) != NULL)
 
 void run_command(const char *, char *const[], int, int);
 
 int main(int argc, char *argv[]) {
-    DEBUG(for (size_t i = 1; i < argc; i++) {
-        fprintf(stderr, "PATTERN[%lu] = \"%s\"\n", i, argv[i]);
-    });
+    IF_ENV("DEBUG") {
+        for (size_t i = 1; i < argc; i++) {
+            fprintf(stderr, "PATTERN[%lu] = \"%s\"\n", i, argv[i]);
+        }
+    }
 
     if (argc < 2) {
         fprintf(stdout, "usage: %s [glob 1] ... [glob N]\n", argv[0]);
@@ -27,9 +26,14 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    int patterns = argc - 1;            // count of glob arguments
-    int extras = patterns - 1;          // number of '-o'
-    int find_argc = 4 + extras * 3 + 1; // +1 for NULL
+    int patterns = argc - 1;           // count of glob arguments
+    int extras = patterns - 1;         // number of '-o'
+    int find_argc = 4 + extras * 3 + 2 // +2 for "-type f"
+                    + 1;               // +1 for NULL
+
+    IF_ENV("IGNORE_GIT") {
+        find_argc += 3; // add flags: -not -path "./.git*"
+    }
 
     char **find_argv = malloc(find_argc * sizeof(char *));
     if (find_argv == NULL) {
@@ -49,6 +53,14 @@ int main(int argc, char *argv[]) {
         find_argv[slot + 2] = argv[i + 2];
     }
 
+    IF_ENV("IGNORE_GIT") {
+        find_argv[find_argc - 6] = "-not";
+        find_argv[find_argc - 5] = "-path";
+        find_argv[find_argc - 4] = "./.git*";
+    }
+
+    find_argv[find_argc - 3] = "-type";
+    find_argv[find_argc - 2] = "f";
     find_argv[find_argc - 1] = NULL;
 
     run_command("find", (char *const *)find_argv, STDIN_FILENO, pipefd[1]);

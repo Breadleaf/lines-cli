@@ -29,6 +29,13 @@ commands `find`, `xargs`, and `wc`.
 
 `$ DEBUG=. lines`
 
+### ignore git
+
+- This mode can also be used with debug mode: `DEBUG=. IGNORE_GIT=. lines`
+- This mode will igore all files matching `./.git*`
+
+`$ IGNORE_GIT=. lines`
+
 ### examples
 
 Standard mode:
@@ -52,6 +59,17 @@ PATTERN[4] = "*.c"
       99 ./main.c
        1 ./.gitignore
      183 total
+```
+Ignore Git mode:
+```
+$ ls -Ap
+.git/ .gitignore lines main.c Makefile README.md
+$ IGNORE_GIT=. ./lines "*"
+      72 ./Makefile
+      74 ./README.md
+     111 ./main.c
+      14 ./lines
+     271 total
 ```
 
 ## why
