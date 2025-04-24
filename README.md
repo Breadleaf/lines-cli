@@ -1,10 +1,19 @@
 # lines (cli tool)
 
+`lines` is a tool that I created to tell me the line count of files in my
+projects as specified by the glob patterns. running it from the root of a
+project will recurse into the sub-directories, and find all files. I didn't
+write any of the hard parts of this tool, I am basically just automating the cli
+commands `find`, `xargs`, and `wc`.
+
 ## requirements
 
 - C compiler in your path that is called when `gcc` is typed
 - GNU make
 - `clang-format` if you want to format the code after making changes
+- coreutils
+- find
+- xargs
 
 ## install
 
