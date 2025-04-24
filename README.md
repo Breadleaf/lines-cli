@@ -6,9 +6,19 @@
 - GNU make
 - `clang-format` if you want to format the code after making changes
 
+## install
+
+`$ make`
+
 ## usage
 
-`$ make help`
+### standard
+
+`$ lines`
+
+### debug
+
+`$ DEBUG=. lines`
 
 ## why
 
